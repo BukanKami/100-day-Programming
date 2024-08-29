@@ -19,3 +19,5 @@ function duplicateEncode(word){
 
     return returnValue;
 }
+
+console.log(duplicateEncode("hello")); 
