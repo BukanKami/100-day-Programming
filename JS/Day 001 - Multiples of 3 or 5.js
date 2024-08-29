@@ -17,6 +17,13 @@ function solution(number){
 // function solution(number) {
 //     return sumOfMultiples(3, number) + sumOfMultiples(5, number) - sumOfMultiples(15, number);
 // }
-// results in 0,703k ms to 0,822 ms
+// results in 0,703k ms to 0,822 ms 
+// some of them wrong, not 100% correct
+
+
+// function solution(number){
+//     return number < 1 ? 0 : [...new Array(number).keys()].filter(n => n % 3 == 0 || n % 5 == 0).reduce((a, b) => a + b);
+// }
+// // 1 liner
 
 console.log(solution(10));
