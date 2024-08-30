@@ -8,4 +8,4 @@ function zeros (n) {
     return result;
 }
 
-console.log(zeros(20))
+console.log(zeros(30))
