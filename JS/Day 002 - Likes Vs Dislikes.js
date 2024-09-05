@@ -2,7 +2,9 @@
 
 function likeOrDislike(buttons) {
     let returnData = 'Nothing';
-
+    for (let i = 0; i < buttons.length; i++) {
+        returnData = returnData === buttons[i] ? 'Nothing' : buttons[i];
+    }
     return returnData;
 }
 
