@@ -10,8 +10,6 @@ function findOdd(A) {
             return parseInt(key);
         }
     }
-    
-    console.log(results);
 }
 
 console.log(findOdd([7]));
