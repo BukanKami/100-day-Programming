@@ -48,20 +48,46 @@ function eliminateShadow(puzzle, shadowPuzzle, row, col, num) {
 }
 
 /**
- * Gets all possible numbers for a specific cell in the puzzle.
- * @param {number[][]} puzzle - The Sudoku puzzle grid.
- * @param {number} row - The row index.
- * @param {number} col - The column index.
- * @returns {number[]} - An array of possible numbers for the cell.
+ * Determines all possible valid numbers that can be placed in a specific cell
+ * of a Sudoku puzzle based on the current state of the puzzle.
+ *
+ * @param {number[][]} puzzle - A 2D array representing the current state of the Sudoku puzzle.
+ *                              Cells containing 0 are considered empty.
+ * @param {number} row - The row index of the cell for which possible numbers are being determined (0-8).
+ * @param {number} col - The column index of the cell for which possible numbers are being determined (0-8).
+ * @returns {number[]} - An array of possible numbers (1-9) that can legally be placed in the given cell.
+ *                       If the cell is already filled, an empty array is returned.
  */
 function getPossibleNumbers(puzzle, row, col) {
-    let possibilities = [];
-    for (let num = 1; num <= 9; num++) {
-        if (checking(puzzle, row, col, num)) {
-            possibilities.push(num);
+    let possibleNumbers = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    // Eliminate numbers already in the row
+    for (let i = 0; i < 9; i++) {
+        if (puzzle[row][i] !== 0) {
+            possibleNumbers.delete(puzzle[row][i]);
         }
     }
-    return possibilities;
+
+    // Eliminate numbers already in the column
+    for (let i = 0; i < 9; i++) {
+        if (puzzle[i][col] !== 0) {
+            possibleNumbers.delete(puzzle[i][col]);
+        }
+    }
+
+    // Eliminate numbers already in the 3x3 grid
+    let startRow = Math.floor(row / 3) * 3;
+    let startCol = Math.floor(col / 3) * 3;
+
+    for (let i = startRow; i < startRow + 3; i++) {
+        for (let j = startCol; j < startCol + 3; j++) {
+            if (puzzle[i][j] !== 0) {
+                possibleNumbers.delete(puzzle[i][j]);
+            }
+        }
+    }
+
+    return Array.from(possibleNumbers); // Convert Set back to Array
 }
 
 /**
@@ -182,27 +208,26 @@ function hiddenSingle(puzzle, shadowPuzzle) {
  * @returns {number[][]} - The solved puzzle.
  */
 function sudoku(puzzle) {
-    let shadowPuzzle = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => []));
-
     // Populate initial shadow puzzle
-    for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-            if (puzzle[row][col] === 0) {
-                shadowPuzzle[row][col] = getPossibleNumbers(puzzle, row, col);
-            }
-        }
-    }
+    let shadowPuzzle = puzzle.map((row, rowIndex) =>
+        row.map((cell, colIndex) =>
+            cell === 0 ? getPossibleNumbers(puzzle, rowIndex, colIndex) : []
+        )
+    );
 
+    // Backtracking algorithm to solve the puzzle
     function solve() {
         while (nakedSingle(puzzle, shadowPuzzle) || hiddenSingle(puzzle, shadowPuzzle)) {
             // Keep processing naked and hidden singles until no more progress can be made
         }
 
+        // Find the most constrained cell to make a guess
         let [row, col] = findMostConstrainedCell(shadowPuzzle);
         if (row === -1 && col === -1) {
             return true; // Puzzle solved
         }
 
+        // Try each possibility in the most constrained cell
         for (let num of shadowPuzzle[row][col]) {
             if (checking(puzzle, row, col, num)) {
                 puzzle[row][col] = num;
@@ -216,7 +241,15 @@ function sudoku(puzzle) {
         return false;
     }
 
+    const startTime = performance.now(); // Start time
+
     solve();
+
+    const endTime = performance.now(); // End time
+
+    const executionTime = endTime - startTime; // Calculate execution time
+    console.log(`Execution time: ${executionTime} milliseconds`);
+
     return puzzle;
 }
 
