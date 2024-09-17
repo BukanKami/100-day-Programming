@@ -33,7 +33,7 @@ function revrot(str, sz) {
     }
 
     // Combine all processed chunks
-    return resultsChunks.join(''); // Add leftover part of the string if any
+    return resultsChunks.join('') + str.substring(chunks * sz); // Add leftover part of the string if any
 }
 
 console.log(revrot("733049910872815764", 5)); // Expected: "330479108928157"
