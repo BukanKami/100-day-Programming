@@ -26,7 +26,7 @@ Jika Anda memiliki saran atau ingin mendiskusikan solusi tertentu, jangan ragu u
 
 ## Lisensi
 
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+Proyek ini dilisensikan di bawah [MIT License](LICENSE.txt).
 
 ---
 
